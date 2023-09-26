@@ -1,6 +1,13 @@
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from 'react-router-dom';
+import { AppRouter } from './router/AppRouter';
+
+const router = createBrowserRouter(AppRouter);
 
 export const JournalApp = () => {
   return (
-    <h1>Journal App</h1>
+    <RouterProvider router={router} />
   )
 }
