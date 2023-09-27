@@ -1,6 +1,7 @@
+import { NothingSelectedView } from "../views/NothingSelectedView"
 
 export const JournalPage = () => {
   return (
-    <h1>Journal Page</h1>
+    <NothingSelectedView />
   )
 }
