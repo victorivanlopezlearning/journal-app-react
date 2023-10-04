@@ -97,7 +97,7 @@ export const RegisterPage = () => {
             <Grid
               item
               xs={12}
-              display={!!errorMessage ? '' : 'none'}
+              display={(!!errorMessage && formSubmitted) ? '' : 'none'}
             >
               <Alert severity='error'>
                 {errorMessage}

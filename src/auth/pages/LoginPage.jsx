@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { startGoogleSignIn, startLoginWithEmailPassword } from '../../store/auth';
 import { Link as RouterLink } from 'react-router-dom';
@@ -17,12 +17,14 @@ export const LoginPage = () => {
 
   const dispatch = useDispatch();
 
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const { email, password, onInputChange, formState } = useForm(formData);
 
   const isAuthenticating = useMemo(() => status === 'checking', [status]);
 
   const onSignIn = (e) => {
     e.preventDefault();
+    setFormSubmitted(true);
     dispatch(startLoginWithEmailPassword(formState));
   }
 
@@ -73,7 +75,7 @@ export const LoginPage = () => {
             <Grid
               item
               xs={12}
-              display={!!errorMessage ? '' : 'none'}
+              display={(!!errorMessage && formSubmitted) ? '' : 'none'}
             >
               <Alert severity='error'>
                 {errorMessage}
