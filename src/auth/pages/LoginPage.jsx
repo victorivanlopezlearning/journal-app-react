@@ -1,8 +1,34 @@
+import { useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { startGoogleSignIn, startLoginWithEmailPassword } from '../../store/auth';
 import { Link as RouterLink } from 'react-router-dom';
-import { Button, Grid, Link, TextField, Typography } from '@mui/material';
+import { Alert, Button, Grid, Link, TextField, Typography } from '@mui/material';
 import { Google } from '@mui/icons-material';
+import { useForm } from '../../hooks';
+
+const formData = {
+  email: '',
+  password: '',
+}
 
 export const LoginPage = () => {
+
+  const { status, errorMessage } = useSelector(state => state.auth);
+
+  const dispatch = useDispatch();
+
+  const { email, password, onInputChange, formState } = useForm(formData);
+
+  const isAuthenticating = useMemo(() => status === 'checking', [status]);
+
+  const onSignIn = (e) => {
+    e.preventDefault();
+    dispatch(startLoginWithEmailPassword(formState));
+  }
+
+  const onGoogleSignIn = () => {
+    dispatch(startGoogleSignIn());
+  }
 
   return (
     <>
@@ -13,20 +39,28 @@ export const LoginPage = () => {
         Inicia sesión
       </Typography>
 
-      <form>
+      <form
+        onSubmit={onSignIn}
+      >
         <Grid container>
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
               label="Correo Electrónico"
               type="email"
+              name='email'
               fullWidth
+              value={email}
+              onChange={onInputChange}
             />
           </Grid>
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
               label="Contraseña"
               type="password"
+              name='password'
               fullWidth
+              value={password}
+              onChange={onInputChange}
             />
           </Grid>
 
@@ -36,14 +70,35 @@ export const LoginPage = () => {
             alignItems='center'
             sx={{ mb: 2, mt: 2 }}
           >
+            <Grid
+              item
+              xs={12}
+              display={!!errorMessage ? '' : 'none'}
+            >
+              <Alert severity='error'>
+                {errorMessage}
+              </Alert>
+            </Grid>
+
             <Grid item xs={12} sm={6}>
-              <Button variant="contained" fullWidth>
+              <Button
+                type='submit'
+                variant="contained"
+                fullWidth
+                disabled={isAuthenticating}
+              >
                 <Typography>Iniciar sesión</Typography>
               </Button>
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <Button variant="contained" fullWidth>
+              <Button
+                type='button'
+                variant="contained"
+                fullWidth
+                disabled={isAuthenticating}
+                onClick={onGoogleSignIn}
+              >
                 <Google />
                 <Typography sx={{ ml: 1 }}>Google</Typography>
               </Button>
