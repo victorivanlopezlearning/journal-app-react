@@ -1,4 +1,10 @@
-import { GoogleAuthProvider, createUserWithEmailAndPassword, signInWithPopup, updateProfile } from 'firebase/auth';
+import {
+  GoogleAuthProvider,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  updateProfile
+} from 'firebase/auth';
 import { FirebaseAuth } from './config';
 
 const googleProvider = new GoogleAuthProvider();
@@ -46,10 +52,35 @@ export const signInWithEmailPassword = async ({ email, password, name }) => {
     }
 
   } catch (error) {
+    return {
+      isLogin: false,
+      errorMessage: (error.code === 'auth/email-already-in-use') 
+        ? 'El email ya se encuentra registrado.' 
+        : error.message,
+    }
+  }
+}
+
+export const loginWithEmailPassword = async ({ email, password }) => {
+  try {
+    const result = await signInWithEmailAndPassword(FirebaseAuth, email, password);
+    const { uid, photoURL, displayName } = result.user;
+
+    return {
+      isLogin: true,
+      displayName,
+      email,
+      photoURL,
+      uid,
+    }
+
+  } catch (error) {
 
     return {
       isLogin: false,
-      errorMessage: error.message,
+      errorMessage: (error.code === 'auth/invalid-login-credentials') 
+        ? 'El email o contraseña con incorrectos.' 
+        : error.message,
     }
   }
 }
