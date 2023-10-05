@@ -49,6 +49,7 @@ export const RegisterPage = () => {
       </Typography>
 
       <form
+        className='animate__animated animate__fadeIn animate__faster'
         onSubmit={onSubmit}
       >
         <Grid container>
