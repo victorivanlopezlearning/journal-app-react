@@ -11,6 +11,11 @@ const formData = {
   password: '',
 }
 
+const formValidations = {
+  email: [(value) => value.length >= 1, 'El correo es obligatorio'],
+  password: [(value) => value.length >= 1, 'La contraseña es obligatoria'],
+}
+
 export const LoginPage = () => {
 
   const { status, errorMessage } = useSelector(state => state.auth);
@@ -18,13 +23,17 @@ export const LoginPage = () => {
   const dispatch = useDispatch();
 
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const { email, password, onInputChange, formState } = useForm(formData);
+  const {
+    email, password, onInputChange, formState,
+    isFormValid, passwordValid, emailValid
+  } = useForm(formData, formValidations);
 
   const isAuthenticating = useMemo(() => status === 'checking', [status]);
 
   const onSignIn = (e) => {
     e.preventDefault();
     setFormSubmitted(true);
+    if (!isFormValid) return;
     dispatch(startLoginWithEmailPassword(formState));
   }
 
@@ -52,6 +61,8 @@ export const LoginPage = () => {
               type="email"
               name='email'
               fullWidth
+              error={!!emailValid && formSubmitted}
+              helperText={formSubmitted ? emailValid : ''}
               value={email}
               onChange={onInputChange}
             />
@@ -62,6 +73,8 @@ export const LoginPage = () => {
               type="password"
               name='password'
               fullWidth
+              error={!!passwordValid && formSubmitted}
+              helperText={formSubmitted ? passwordValid : ''}
               value={password}
               onChange={onInputChange}
             />
@@ -76,7 +89,7 @@ export const LoginPage = () => {
             <Grid
               item
               xs={12}
-              display={(!!errorMessage && formSubmitted) ? '' : 'none'}
+              display={(!!errorMessage) ? '' : 'none'}
             >
               <Alert severity='error'>
                 {errorMessage}
