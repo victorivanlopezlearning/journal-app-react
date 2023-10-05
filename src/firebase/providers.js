@@ -3,6 +3,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signInWithPopup,
+  signOut,
   updateProfile
 } from 'firebase/auth';
 import { FirebaseAuth } from './config';
@@ -54,8 +55,8 @@ export const signInWithEmailPassword = async ({ email, password, name }) => {
   } catch (error) {
     return {
       isLogin: false,
-      errorMessage: (error.code === 'auth/email-already-in-use') 
-        ? 'El email ya se encuentra registrado.' 
+      errorMessage: (error.code === 'auth/email-already-in-use')
+        ? 'El email ya se encuentra registrado.'
         : error.message,
     }
   }
@@ -78,9 +79,13 @@ export const loginWithEmailPassword = async ({ email, password }) => {
 
     return {
       isLogin: false,
-      errorMessage: (error.code === 'auth/invalid-login-credentials') 
-        ? 'El email o contraseña con incorrectos.' 
+      errorMessage: (error.code === 'auth/invalid-login-credentials')
+        ? 'El email o contraseña con incorrectos.'
         : error.message,
     }
   }
+}
+
+export const logoutFirebase = async () => {
+  await signOut(FirebaseAuth);
 }
