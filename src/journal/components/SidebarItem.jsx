@@ -8,7 +8,7 @@ export const SidebarItem = ({ note }) => {
   const dispatch = useDispatch();
 
   const onActiveNote = () => {
-    dispatch(setActiveNote({...note, imageURLs: []}));
+    dispatch(setActiveNote({...note}));
   };
 
   return (
