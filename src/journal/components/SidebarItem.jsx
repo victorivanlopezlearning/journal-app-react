@@ -8,7 +8,7 @@ export const SidebarItem = ({ note }) => {
   const dispatch = useDispatch();
 
   const onActiveNote = () => {
-    dispatch(setActiveNote({...note}));
+    dispatch(setActiveNote({ ...note }));
   };
 
   return (
@@ -22,8 +22,8 @@ export const SidebarItem = ({ note }) => {
         <Grid container>
           <ListItemText
             primary={note.title}
-            secondary={'Lorem ipsum dolor sit.'}
-            primaryTypographyProps={{noWrap: true}}
+            secondary={note.body}
+            primaryTypographyProps={{ noWrap: true }}
           />
         </Grid>
       </ListItemButton>
